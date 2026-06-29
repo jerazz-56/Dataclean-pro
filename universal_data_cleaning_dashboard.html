@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataClean Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+<style>
+:root {
+  --bg:        #0d1117;
+  --surface-1: #161b22;
+  --surface-2: #1c2128;
+  --surface-3: #21262d;
+  --border:    #30363d;
+  --border-hi: #444c56;
+
+  --text-primary:   #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted:     #484f58;
+
+  --accent:     #00d4aa;
+  --accent-dim: rgba(0,212,170,0.12);
+  --accent-mid: rgba(0,212,170,0.25);
+
+  --amber:      #f59e0b;
+  --amber-dim:  rgba(245,158,11,0.12);
+  --red:        #ef4444;
+  --red-dim:    rgba(239,68,68,0.12);
+  --blue:       #58a6ff;
+  --blue-dim:   rgba(88,166,255,0.12);
+  --purple:     #bc8cff;
+  --purple-dim: rgba(188,140,255,0.12);
+
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+
+  --radius: 4px;
+  --radius-lg: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ── */
+.dash { display: flex; flex-direction: column; min-height: 600px; }
+
+/* ── Topbar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-1);
+}
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-mark {
+  width: 26px; height: 26px;
+  background: var(--accent);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-mark i { font-size: 14px; color: #0d1117; }
+.topbar h1 {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.topbar-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; }
+.file-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.topbar-actions { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-family: var(--sans);
+  padding: 5px 10px; border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  cursor: pointer; transition: all 0.12s;
+  white-space: nowrap;
+}
+.btn:hover { border-color: var(--border-hi); color: var(--text-primary); background: var(--surface-3); }
+.btn-accent {
+  background: var(--accent);
+  color: #0d1117;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.btn-accent:hover { background: #00bfa0; border-color: #00bfa0; color: #0d1117; }
+.btn-icon { padding: 5px 8px; }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-1);
+  gap: 2px;
+}
+.tab {
+  font-size: 12px; font-family: var(--sans);
+  padding: 9px 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none; background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.12s;
+  letter-spacing: 0.1px;
+}
+.tab:hover:not(.active) { color: var(--text-primary); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+
+/* ── Main ── */
+.main { display: flex; flex: 1; min-height: 0; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 216px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface-1);
+  padding: 12px 10px;
+  display: flex; flex-direction: column; gap: 14px;
+  overflow-y: auto;
+}
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 0 4px; margin-bottom: 2px;
+}
+.sidebar-section { display: flex; flex-direction: column; gap: 4px; }
+
+.col-search {
+  width: 100%;
+  font-size: 12px; font-family: var(--sans);
+  padding: 5px 8px; height: 28px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-primary);
+  outline: none; transition: border-color 0.12s;
+}
+.col-search:focus { border-color: var(--accent); }
+.col-search::placeholder { color: var(--text-muted); }
+
+.col-list { display: flex; flex-direction: column; gap: 1px; flex: 1; overflow-y: auto; }
+.col-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 6px; border-radius: var(--radius);
+  cursor: pointer; font-size: 11px;
+  color: var(--text-secondary);
+  transition: all 0.1s;
+}
+.col-item:hover { background: var(--surface-2); color: var(--text-primary); }
+.col-item.active { background: var(--accent-dim); color: var(--accent); }
+.col-item i { font-size: 12px; flex-shrink: 0; opacity: 0.7; }
+.col-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--mono); font-size: 11px; }
+
+.col-badge {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  padding: 1px 4px; border-radius: 2px;
+  letter-spacing: 0.3px;
+}
+.badge-num    { background: var(--blue-dim);   color: var(--blue);   }
+.badge-cat    { background: var(--accent-dim); color: var(--accent); }
+.badge-dt     { background: var(--amber-dim);  color: var(--amber);  }
+.badge-txt    { background: var(--purple-dim); color: var(--purple); }
+.badge-bool   { background: var(--red-dim);    color: var(--red);    }
+
+.sidebar-divider { height: 1px; background: var(--border); margin: 2px 0; }
+
+/* ── Content ── */
+.content { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+
+/* ── Cards ── */
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+}
+.section-title {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  margin-bottom: 12px;
+}
+.section-title i { font-size: 14px; color: var(--accent); }
+
+/* ── Metrics ── */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+}
+.metric-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  border-left: 3px solid var(--border);
+  transition: border-color 0.15s;
+}
+.metric-card.good { border-left-color: var(--accent); }
+.metric-card.warn { border-left-color: var(--amber); }
+.metric-card.bad  { border-left-color: var(--red); }
+.metric-card.info { border-left-color: var(--blue); }
+.metric-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.metric-value {
+  font-family: var(--mono);
+  font-size: 24px; font-weight: 600;
+  color: var(--text-primary); line-height: 1;
+}
+.metric-value.good { color: var(--accent); }
+.metric-value.warn { color: var(--amber); }
+.metric-value.bad  { color: var(--red); }
+.metric-sub { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+/* ── Progress bars ── */
+.progress-row { margin-bottom: 10px; }
+.progress-labels { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.progress-labels span { font-size: 11px; color: var(--text-secondary); }
+.progress-labels strong { font-family: var(--mono); font-size: 11px; color: var(--text-primary); }
+.progress-track {
+  height: 5px; background: var(--surface-3);
+  border-radius: 2px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+
+/* ── Heatmap rows ── */
+.heatmap-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.heatmap-label {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--text-secondary); width: 88px;
+  flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.heatmap-track {
+  flex: 1; background: var(--surface-3);
+  height: 12px; border-radius: 2px; overflow: hidden;
+}
+.heatmap-bar { height: 100%; min-width: 2px; transition: width 0.3s; }
+.heatmap-pct {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--text-muted); width: 28px; text-align: right;
+}
+
+/* ── Stat table ── */
+.stat-table { width: 100%; font-size: 11px; border-collapse: collapse; }
+.stat-table th {
+  text-align: left; padding: 5px 8px;
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+.stat-table td {
+  padding: 5px 8px; color: var(--text-secondary);
+  border-bottom: 1px solid var(--surface-3);
+  font-family: var(--mono); font-size: 11px;
+}
+.stat-table tr:last-child td { border-bottom: none; }
+.stat-table td:first-child { color: var(--text-primary); font-weight: 500; }
+.stat-table tr:hover td { background: var(--surface-2); }
+
+/* ── Action log ── */
+.action-log { display: flex; flex-direction: column; gap: 5px; }
+.action-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 11px; color: var(--text-secondary);
+  padding: 6px 8px;
+  background: var(--surface-2); border-radius: var(--radius);
+  border-left: 2px solid var(--border);
+  font-family: var(--mono);
+}
+.action-item.fix  { border-left-color: var(--accent); }
+.action-item.warn { border-left-color: var(--amber); }
+.action-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+
+/* ── Insight items ── */
+.insight-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 8px 10px;
+  background: var(--surface-2); border-radius: var(--radius);
+  margin-bottom: 5px;
+  border-left: 2px solid var(--border);
+}
+.insight-item.ok   { border-left-color: var(--accent); }
+.insight-item.warn { border-left-color: var(--amber); }
+.insight-item.info { border-left-color: var(--blue); }
+.insight-icon { font-size: 14px; flex-shrink: 0; }
+.insight-text { font-size: 11px; color: var(--text-secondary); font-family: var(--mono); line-height: 1.6; }
+
+/* ── Charts ── */
+.chart-wrap { position: relative; width: 100%; }
+.chart-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.quality-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── Tags ── */
+.tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 500;
+  padding: 2px 6px; border-radius: 2px;
+}
+
+/* ── Upload zone ── */
+.upload-zone {
+  border: 1px dashed var(--border-hi);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  cursor: pointer; transition: all 0.15s;
+  text-align: center;
+}
+.upload-zone:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.upload-zone i { font-size: 32px; color: var(--text-muted); }
+.upload-zone:hover i { color: var(--accent); }
+.upload-zone-title { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.upload-zone-sub { font-size: 12px; color: var(--text-muted); }
+
+/* ── Score display ── */
+.score-display {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 4px;
+  padding: 16px;
+}
+.score-number {
+  font-family: var(--mono);
+  font-size: 56px; font-weight: 600; line-height: 1;
+}
+.score-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.score-sublabel { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+/* ── Filter bar ── */
+.filter-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.filter-bar input, .filter-bar select {
+  font-size: 11px; font-family: var(--sans);
+  padding: 4px 8px; height: 28px;
+  border-radius: var(--radius); border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text-primary);
+  outline: none;
+}
+.filter-bar input:focus, .filter-bar select:focus { border-color: var(--accent); }
+
+/* ── Topbar terminal dot ── */
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hi); }
+</style>
+</head>
+<body>
+
+<div class="dash" id="app">
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-mark"><i class="ti ti-database"></i></div>
+    <h1 id="dataset-title">DataClean Pro</h1>
+  </div>
+  <div class="topbar-sep"></div>
+  <div class="status-dot" id="status-dot" style="background:var(--text-muted); box-shadow:none;"></div>
+  <span class="file-meta" id="file-meta">no dataset loaded</span>
+  <div class="topbar-actions">
+    <button class="btn" onclick="triggerUpload()"><i class="ti ti-upload"></i> Load dataset</button>
+    <button class="btn btn-icon" onclick="refreshData()" title="Refresh"><i class="ti ti-refresh"></i></button>
+    <button class="btn btn-accent" onclick="exportReport()"><i class="ti ti-download"></i> Export CSV</button>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('overview')">Overview</button>
+  <button class="tab" onclick="switchTab('quality')">Quality</button>
+  <button class="tab" onclick="switchTab('eda')">Explore</button>
+  <button class="tab" onclick="switchTab('report')">Report</button>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Filter</div>
+      <input class="col-search" type="text" placeholder="Search columns…" id="col-search" oninput="filterCols(this.value)">
+    </div>
+    <div class="sidebar-section" style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+      <div class="sidebar-label">Columns</div>
+      <div class="col-list" id="col-list"></div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Actions</div>
+      <button class="btn" onclick="runCleaning()" style="width:100%; justify-content:center; gap:6px; font-size:11px;">
+        <i class="ti ti-wand"></i> Auto-clean
+      </button>
+      <button class="btn" onclick="removeDups()" style="width:100%; justify-content:center; gap:6px; font-size:11px; margin-top:4px;">
+        <i class="ti ti-copy-off"></i> Remove dupes
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="main-content"></div>
+</div>
+
+</div>
+
+<input type="file" id="file-input" accept=".csv,.json,.xlsx,.xls" style="display:none" onchange="handleFile(event)">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+<script>
+// ── Chart.js global defaults for dark theme ──
+Chart.defaults.color = '#8b949e';
+Chart.defaults.borderColor = '#30363d';
+Chart.defaults.font.family = "'JetBrains Mono', monospace";
+Chart.defaults.font.size = 10;
+
+let state = {
+  dataset: null, cleaned: null, schema: [],
+  activeTab: 'overview', selectedCol: null,
+  cleaningLog: [], charts: {}
+};
+
+const COLORS = ['#00d4aa','#58a6ff','#f59e0b','#bc8cff','#ef4444','#fb923c','#34d399','#a78bfa'];
+
+const SAMPLE_DATA = generateSampleData();
+
+function generateSampleData() {
+  const names = ['Alice Johnson','Bob Smith','Carol White','David Lee','Eva Brown','Frank Miller','Grace Kim','Henry Chen','Iris Davis','Jack Wilson'];
+  const depts = ['Engineering','Marketing','Sales','HR','Finance','Engineering','Marketing','Sales',null,'Engineering'];
+  const rows = [];
+  for (let i = 0; i < 120; i++) {
+    const base = i % 10;
+    rows.push({
+      employee_id: i < 3 ? 1001 : 1001 + i,
+      name: names[base],
+      department: i === 15 ? null : depts[base],
+      salary: i === 7 ? null : Math.round(55000 + (base * 8000) + (Math.random() - 0.5) * 5000),
+      age: i === 22 ? 150 : Math.round(28 + base * 3 + Math.random() * 5),
+      hire_date: `2${Math.floor(Math.random()*2)+0}${Math.floor(Math.random()*5)+18}-${String(Math.floor(Math.random()*12)+1).padStart(2,'0')}-${String(Math.floor(Math.random()*28)+1).padStart(2,'0')}`,
+      performance: ['A','B','C','B','A','C','B','A',null,'B'][base],
+      remote: [true,false,true,false,true,true,false,true,false,null][base],
+      projects: Math.round(1 + Math.random() * 8),
+      satisfaction: i === 44 ? null : +(3 + Math.random() * 2).toFixed(1)
+    });
+  }
+  return rows;
+}
+
+function detectSchema(rows) {
+  if (!rows || !rows.length) return [];
+  const keys = Object.keys(rows[0]);
+  return keys.map(key => {
+    const vals = rows.map(r => r[key]).filter(v => v !== null && v !== undefined && v !== '');
+    const nullCount = rows.length - vals.length;
+    let type = 'text';
+    if (vals.length === 0) { type = 'text'; }
+    else if (vals.every(v => typeof v === 'boolean' || v === 'true' || v === 'false')) { type = 'boolean'; }
+    else if (vals.every(v => !isNaN(Number(v)))) { type = 'numeric'; }
+    else if (vals.every(v => /^\d{4}-\d{2}-\d{2}/.test(String(v)))) { type = 'datetime'; }
+    else {
+      const uniq = new Set(vals.map(v => String(v)));
+      type = uniq.size < vals.length * 0.3 ? 'categorical' : 'text';
+    }
+    const numVals = vals.map(Number).filter(v => !isNaN(v));
+    return {
+      name: key, type, nullCount,
+      nullPct: Math.round((nullCount / rows.length) * 100),
+      unique: new Set(vals.map(v => String(v))).size,
+      min: numVals.length ? Math.min(...numVals) : null,
+      max: numVals.length ? Math.max(...numVals) : null,
+      mean: numVals.length ? numVals.reduce((a,b)=>a+b,0)/numVals.length : null,
+    };
+  });
+}
+
+function computeQualityScore(rows, schema) {
+  const nullPct = schema.reduce((a,c) => a + c.nullPct, 0) / schema.length;
+  const dupCount = rows.length - new Set(rows.map(r => JSON.stringify(r))).size;
+  const dupPct = (dupCount / rows.length) * 100;
+  const hasOutliers = schema.filter(s => s.type === 'numeric' && detectOutliers(rows, s.name).length > 0).length;
+  return Math.max(0, Math.min(100, Math.round(100 - (nullPct * 0.5) - (dupPct * 0.3) - (hasOutliers * 2))));
+}
+
+function detectOutliers(rows, col) {
+  const vals = rows.map(r => Number(r[col])).filter(v => !isNaN(v));
+  if (vals.length < 4) return [];
+  const sorted = [...vals].sort((a,b)=>a-b);
+  const q1 = sorted[Math.floor(sorted.length * 0.25)];
+  const q3 = sorted[Math.floor(sorted.length * 0.75)];
+  const iqr = q3 - q1;
+  return vals.filter(v => v < q1 - 1.5 * iqr || v > q3 + 1.5 * iqr);
+}
+
+function initDashboard(rows) {
+  state.dataset = rows;
+  state.cleaned = [...rows];
+  state.schema = detectSchema(rows);
+  state.cleaningLog = [];
+  document.getElementById('status-dot').style.cssText = 'background:var(--accent); box-shadow:0 0 6px var(--accent);';
+  document.getElementById('file-meta').textContent = `${rows.length.toLocaleString()} rows · ${state.schema.length} cols`;
+  renderSidebar();
+  renderCurrentTab();
+}
+
+function renderSidebar() {
+  const list = document.getElementById('col-list');
+  const badgeMap = { numeric:'badge-num', categorical:'badge-cat', datetime:'badge-dt', text:'badge-txt', boolean:'badge-bool' };
+  const labelMap = { numeric:'NUM', categorical:'CAT', datetime:'DATE', text:'TXT', boolean:'BOOL' };
+  const iconMap  = { numeric:'ti-123', categorical:'ti-tag', datetime:'ti-calendar', text:'ti-text-size', boolean:'ti-toggle-left' };
+  list.innerHTML = state.schema.map(col => `
+    <div class="col-item ${state.selectedCol === col.name ? 'active' : ''}" onclick="selectCol('${col.name}')">
+      <i class="ti ${iconMap[col.type]}"></i>
+      <span class="col-name" title="${col.name}">${col.name}</span>
+      <span class="col-badge ${badgeMap[col.type]}">${labelMap[col.type]}</span>
+    </div>
+  `).join('');
+}
+
+function filterCols(q) {
+  document.querySelectorAll('.col-item').forEach(el => {
+    el.style.display = el.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function selectCol(name) {
+  state.selectedCol = name;
+  renderSidebar();
+  if (state.activeTab === 'eda') renderEDA();
+}
+
+function switchTab(tab) {
+  state.activeTab = tab;
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['overview','quality','eda','report'][i] === tab);
+  });
+  destroyCharts();
+  renderCurrentTab();
+}
+
+function destroyCharts() {
+  Object.values(state.charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  state.charts = {};
+}
+
+function renderCurrentTab() {
+  const content = document.getElementById('main-content');
+  if (!state.dataset) { content.innerHTML = renderUploadZone(); return; }
+  if (state.activeTab === 'overview') content.innerHTML = renderOverview();
+  else if (state.activeTab === 'quality') content.innerHTML = renderQuality();
+  else if (state.activeTab === 'eda') content.innerHTML = renderEDA();
+  else if (state.activeTab === 'report') content.innerHTML = renderReport();
+  setTimeout(initCharts, 100);
+}
+
+function renderUploadZone() {
+  return `
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; padding:40px;">
+      <div class="upload-zone" onclick="triggerUpload()" style="max-width:380px; width:100%;">
+        <i class="ti ti-cloud-upload"></i>
+        <div class="upload-zone-title">Drop a file or click to upload</div>
+        <div class="upload-zone-sub">CSV and JSON fully supported · Excel: save as CSV first</div>
+        <button class="btn btn-accent" style="margin-top:4px;">Choose file</button>
+      </div>
+      <p style="font-size:11px; color:var(--text-muted); margin-top:14px; font-family:var(--mono);">
+        or try the <button onclick="loadSample()" style="background:none; border:none; color:var(--accent); cursor:pointer; font-size:11px; font-family:var(--mono); text-decoration:underline;">sample dataset</button>
+      </p>
+    </div>`;
+}
+
+function renderOverview() {
+  const rows = state.cleaned, schema = state.schema;
+  const score = computeQualityScore(rows, schema);
+  const dups = rows.length - new Set(rows.map(r => JSON.stringify(r))).size;
+  const scoreColor = score >= 80 ? 'var(--accent)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
+  const typeCount = schema.reduce((a,c) => { a[c.type] = (a[c.type]||0)+1; return a; }, {});
+
+  const statRows = schema.filter(s => s.type==='numeric').slice(0,5).map(c => {
+    const vals = rows.map(r => Number(r[c.name])).filter(v => !isNaN(v));
+    const sorted = [...vals].sort((a,b)=>a-b);
+    const mean = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+    const median = sorted[Math.floor(sorted.length/2)] || 0;
+    const std = vals.length > 1 ? Math.sqrt(vals.reduce((a,b)=>a+(b-mean)**2,0)/(vals.length-1)) : 0;
+    return `<tr><td>${c.name}</td><td>${vals.length}</td><td>${mean.toFixed(1)}</td><td>${median.toFixed(1)}</td><td>${Math.min(...vals).toFixed(0)}</td><td>${Math.max(...vals).toFixed(0)}</td><td>${std.toFixed(1)}</td></tr>`;
+  }).join('');
+
+  const missCells = schema.reduce((a,c)=>a+c.nullCount,0);
+
+  return `
+    <div class="metrics-grid">
+      <div class="metric-card info">
+        <div class="metric-label">Records</div>
+        <div class="metric-value">${rows.length.toLocaleString()}</div>
+        <div class="metric-sub">rows loaded</div>
+      </div>
+      <div class="metric-card info">
+        <div class="metric-label">Columns</div>
+        <div class="metric-value">${schema.length}</div>
+        <div class="metric-sub">auto-detected</div>
+      </div>
+      <div class="metric-card ${dups > 0 ? 'warn' : 'good'}">
+        <div class="metric-label">Duplicates</div>
+        <div class="metric-value ${dups > 0 ? 'warn' : 'good'}">${dups}</div>
+        <div class="metric-sub">${dups > 0 ? 'needs attention' : 'none found'}</div>
+      </div>
+      <div class="metric-card ${missCells > 0 ? 'warn' : 'good'}">
+        <div class="metric-label">Missing cells</div>
+        <div class="metric-value ${missCells > 0 ? 'warn' : 'good'}">${missCells}</div>
+        <div class="metric-sub">across all cols</div>
+      </div>
+      <div class="metric-card ${score >= 80 ? 'good' : score >= 60 ? 'warn' : 'bad'}">
+        <div class="metric-label">Quality score</div>
+        <div class="metric-value" style="color:${scoreColor}">${score}%</div>
+        <div class="metric-sub">${score >= 80 ? 'good' : score >= 60 ? 'fair' : 'needs work'}</div>
+      </div>
+    </div>
+
+    <div class="chart-2col">
+      <div class="card">
+        <div class="section-title"><i class="ti ti-circles"></i> Column types</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+          ${Object.entries(typeCount).map(([t,n]) => `<span class="tag badge-${t==='numeric'?'num':t==='categorical'?'cat':t==='datetime'?'dt':t==='boolean'?'bool':'txt'}">${t} (${n})</span>`).join('')}
+        </div>
+        <div class="chart-wrap" style="height:180px;">
+          <canvas id="typeChart" role="img" aria-label="Donut chart of column types"></canvas>
+        </div>
+      </div>
+      <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div class="section-title" style="width:100%;"><i class="ti ti-shield-check"></i> Overall quality</div>
+        <div class="score-display">
+          <div class="score-number" style="color:${scoreColor}">${score}</div>
+          <div class="score-label">/ 100</div>
+          <div class="score-sublabel">${score >= 80 ? 'Good — suitable for analysis' : score >= 60 ? 'Fair — some cleaning recommended' : 'Poor — cleaning required'}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><i class="ti ti-table"></i> Statistical summary</div>
+      <div style="overflow-x:auto;">
+        <table class="stat-table">
+          <thead><tr><th>Column</th><th>Count</th><th>Mean</th><th>Median</th><th>Min</th><th>Max</th><th>Std dev</th></tr></thead>
+          <tbody>${statRows || '<tr><td colspan="7" style="color:var(--text-muted)">No numeric columns found</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function renderQuality() {
+  const rows = state.cleaned, schema = state.schema;
+  const dups = rows.length - new Set(rows.map(r => JSON.stringify(r))).size;
+  const completeness = Math.round(100 - schema.reduce((a,c)=>a+c.nullPct,0)/schema.length);
+  const uniqueness = Math.round((1 - dups/rows.length)*100);
+  const numericCols = schema.filter(s => s.type === 'numeric');
+  const outlierCols = numericCols.map(s => ({ col: s, outliers: detectOutliers(rows, s.name) })).filter(o => o.outliers.length > 0);
+  const validity = Math.round((1 - outlierCols.length / Math.max(numericCols.length, 1)) * 100);
+
+  const missingRows = schema.map(col => {
+    const pct = col.nullPct;
+    const color = pct === 0 ? 'var(--accent)' : pct < 10 ? 'var(--amber)' : 'var(--red)';
+    return `<div class="heatmap-row">
+      <span class="heatmap-label" title="${col.name}">${col.name}</span>
+      <div class="heatmap-track">
+        <div class="heatmap-bar" style="width:${Math.max(pct,pct>0?2:0)}%; background:${color};"></div>
+      </div>
+      <span class="heatmap-pct">${pct}%</span>
+    </div>`;
+  }).join('');
+
+  const logItems = state.cleaningLog.map(l => `
+    <div class="action-item ${l.type}">
+      <div class="action-dot" style="background:${l.type==='fix'?'var(--accent)':l.type==='warn'?'var(--amber)':'var(--blue)'};"></div>
+      <span>${l.msg}</span>
+    </div>`).join('') || '<div style="font-size:11px; color:var(--text-muted); padding:8px; font-family:var(--mono);">No actions run yet — click Auto-clean.</div>';
+
+  return `
+    <div class="quality-grid">
+      <div class="card">
+        <div class="section-title"><i class="ti ti-flame"></i> Missing values</div>
+        ${missingRows}
+      </div>
+      <div class="card">
+        <div class="section-title"><i class="ti ti-shield-check"></i> Quality breakdown</div>
+        <div class="progress-row">
+          <div class="progress-labels"><span>Completeness</span><strong>${completeness}%</strong></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${completeness}%; background:var(--accent);"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-labels"><span>Uniqueness</span><strong>${uniqueness}%</strong></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${uniqueness}%; background:var(--blue);"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-labels"><span>Validity (no outliers)</span><strong>${validity}%</strong></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${validity}%; background:var(--amber);"></div></div>
+        </div>
+        <div style="padding-top:10px; border-top:1px solid var(--border); margin-top:4px;">
+          <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Duplicates</div>
+          <span style="font-family:var(--mono); font-size:22px; font-weight:600; color:${dups>0?'var(--amber)':'var(--accent)'};">${dups}</span>
+          <span style="font-size:11px; color:var(--text-muted); font-family:var(--mono);"> rows</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><i class="ti ti-alert-triangle"></i> Outlier detection</div>
+      ${outlierCols.length === 0
+        ? '<div style="font-size:11px; color:var(--text-muted); font-family:var(--mono);">No statistical outliers detected.</div>'
+        : outlierCols.map(o => `<div class="heatmap-row" style="margin-bottom:6px;">
+            <span class="heatmap-label">${o.col.name}</span>
+            <span style="font-size:11px; color:var(--amber); font-family:var(--mono);">${o.outliers.length} outlier${o.outliers.length>1?'s':''}</span>
+            <span style="font-size:10px; color:var(--text-muted); margin-left:8px; font-family:var(--mono);">range: [${Math.min(...o.outliers).toFixed(0)}, ${Math.max(...o.outliers).toFixed(0)}]</span>
+          </div>`).join('')
+      }
+    </div>
+
+    <div class="card">
+      <div class="section-title"><i class="ti ti-list-check"></i> Cleaning log</div>
+      <div class="action-log">${logItems}</div>
+    </div>`;
+}
+
+function renderEDA() {
+  const schema = state.schema;
+  const selCol = state.selectedCol ? schema.find(s => s.name === state.selectedCol) : null;
+  const numCols = schema.filter(s => s.type === 'numeric');
+  const catCols = schema.filter(s => s.type === 'categorical');
+
+  let colSection = '';
+  if (selCol && selCol.type === 'numeric') {
+    colSection = `<div class="card"><div class="section-title"><i class="ti ti-chart-histogram"></i> ${selCol.name} — distribution</div>
+      <div class="chart-wrap" style="height:220px;"><canvas id="histChart" role="img" aria-label="Histogram of ${selCol.name}"></canvas></div></div>`;
+  } else if (selCol && (selCol.type === 'categorical' || selCol.type === 'boolean')) {
+    colSection = `<div class="card"><div class="section-title"><i class="ti ti-chart-bar"></i> ${selCol.name} — frequency</div>
+      <div class="chart-wrap" style="height:220px;"><canvas id="catChart" role="img" aria-label="Chart of ${selCol.name}"></canvas></div></div>`;
+  }
+
+  return `
+    <div style="font-size:11px; color:var(--text-muted); font-family:var(--mono);">← Select a column to explore it individually.</div>
+
+    ${colSection}
+
+    <div class="chart-2col">
+      ${numCols.length >= 2 ? `<div class="card"><div class="section-title"><i class="ti ti-chart-dots"></i> Scatter — ${numCols[0].name} vs ${numCols[1]?.name||'—'}</div>
+        <div class="chart-wrap" style="height:200px;"><canvas id="scatterChart"></canvas></div></div>` : ''}
+      ${catCols.length ? `<div class="card"><div class="section-title"><i class="ti ti-chart-pie"></i> ${catCols[0].name} breakdown</div>
+        <div class="chart-wrap" style="height:200px;"><canvas id="pieChart"></canvas></div></div>` : ''}
+    </div>
+
+    ${numCols.length >= 2 ? `<div class="card"><div class="section-title"><i class="ti ti-grid-dots"></i> Correlation matrix</div>
+      <div id="corrMatrix" style="overflow-x:auto;"></div></div>` : ''}
+
+    ${numCols.length ? `<div class="card"><div class="section-title"><i class="ti ti-chart-bar-off"></i> Box plots (median values)</div>
+      <div class="chart-wrap" style="height:220px;"><canvas id="boxChart"></canvas></div></div>` : ''}
+  `;
+}
+
+function renderReport() {
+  const rows = state.cleaned, schema = state.schema;
+  const score = computeQualityScore(rows, schema);
+  const dups = rows.length - new Set(rows.map(r => JSON.stringify(r))).size;
+  const scoreColor = score >= 80 ? 'var(--accent)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
+  const issues = [];
+  schema.forEach(c => { if (c.nullPct > 0) issues.push({ type:'warn', msg:`${c.name} — ${c.nullPct}% missing values` }); });
+  if (dups > 0) issues.push({ type:'warn', msg:`${dups} duplicate rows detected` });
+  schema.filter(s => s.type==='numeric').forEach(s => {
+    const ol = detectOutliers(rows, s.name);
+    if (ol.length) issues.push({ type:'warn', msg:`${s.name} — ${ol.length} statistical outliers` });
+  });
+
+  const numInsights = schema.filter(s=>s.type==='numeric').slice(0,3).map(s => {
+    const vals = rows.map(r=>Number(r[s.name])).filter(v=>!isNaN(v));
+    const mean = vals.reduce((a,b)=>a+b,0)/vals.length;
+    return { type:'info', msg:`${s.name}: avg ${mean.toFixed(1)}, range ${Math.min(...vals).toFixed(0)}–${Math.max(...vals).toFixed(0)}` };
+  });
+
+  return `
+    <div class="card">
+      <div class="section-title"><i class="ti ti-file-analytics"></i> Executive summary</div>
+      <div style="display:grid; grid-template-columns:auto 1fr; gap:24px; align-items:center;">
+        <div class="score-display" style="padding:8px 16px;">
+          <div class="score-number" style="color:${scoreColor}; font-size:64px;">${score}</div>
+          <div class="score-label">quality score / 100</div>
+        </div>
+        <div>
+          <p style="font-size:12px; color:var(--text-secondary); line-height:1.8; font-family:var(--mono);">
+            Dataset contains <strong style="color:var(--text-primary);">${rows.length.toLocaleString()}</strong> records across
+            <strong style="color:var(--text-primary);">${schema.length}</strong> columns.
+            ${score >= 80 ? 'Overall quality is good.' : score >= 60 ? 'Fair quality — some cleaning recommended.' : 'Quality needs improvement before analysis.'}
+          </p>
+          <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:5px;">
+            ${schema.filter(s=>s.type==='numeric').length ? `<span class="tag badge-num">${schema.filter(s=>s.type==='numeric').length} numeric</span>` : ''}
+            ${schema.filter(s=>s.type==='categorical').length ? `<span class="tag badge-cat">${schema.filter(s=>s.type==='categorical').length} categorical</span>` : ''}
+            ${schema.filter(s=>s.type==='datetime').length ? `<span class="tag badge-dt">${schema.filter(s=>s.type==='datetime').length} date</span>` : ''}
+            ${schema.filter(s=>s.type==='boolean').length ? `<span class="tag badge-bool">${schema.filter(s=>s.type==='boolean').length} boolean</span>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><i class="ti ti-bulb"></i> Findings</div>
+      ${issues.length === 0
+        ? `<div class="insight-item ok"><i class="ti ti-circle-check insight-icon" style="color:var(--accent)"></i><div class="insight-text">No data quality issues detected.</div></div>`
+        : issues.map(i => `<div class="insight-item warn"><i class="ti ti-alert-circle insight-icon" style="color:var(--amber)"></i><div class="insight-text">${i.msg}</div></div>`).join('')
+      }
+      ${numInsights.map(i => `<div class="insight-item info"><i class="ti ti-trending-up insight-icon" style="color:var(--blue)"></i><div class="insight-text">${i.msg}</div></div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="section-title"><i class="ti ti-list-check"></i> Cleaning log</div>
+      ${state.cleaningLog.length === 0
+        ? '<p style="font-size:11px; color:var(--text-muted); font-family:var(--mono);">Run auto-clean to generate a log.</p>'
+        : state.cleaningLog.map(l => `<div class="action-item ${l.type}" style="margin-bottom:4px;"><div class="action-dot" style="background:${l.type==='fix'?'var(--accent)':'var(--amber)'};"></div><span>${l.msg}</span></div>`).join('')
+      }
+    </div>
+
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-accent" onclick="exportReport()"><i class="ti ti-download"></i> Download cleaned CSV</button>
+      <button class="btn" onclick="sendPrompt('Generate a detailed statistical analysis of this dataset')"><i class="ti ti-sparkles"></i> AI analysis ↗</button>
+    </div>
+  `;
+}
+
+function initCharts() {
+  const rows = state.cleaned, schema = state.schema;
+  const numCols = schema.filter(s => s.type === 'numeric');
+  const catCols = schema.filter(s => s.type === 'categorical');
+
+  if (document.getElementById('typeChart')) {
+    const typeCount = schema.reduce((a,c) => { a[c.type] = (a[c.type]||0)+1; return a; }, {});
+    state.charts.typeChart = new Chart(document.getElementById('typeChart'), {
+      type: 'doughnut',
+      data: { labels: Object.keys(typeCount), datasets: [{ data: Object.values(typeCount), backgroundColor: COLORS, borderWidth: 2, borderColor: '#161b22' }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { padding: 12, color: '#8b949e' } } } }
+    });
+  }
+
+  if (document.getElementById('scatterChart') && numCols.length >= 2) {
+    const pts = rows.slice(0,200).map(r => ({ x: Number(r[numCols[0].name]), y: Number(r[numCols[1].name]) })).filter(p => !isNaN(p.x) && !isNaN(p.y));
+    state.charts.scatter = new Chart(document.getElementById('scatterChart'), {
+      type: 'scatter',
+      data: { datasets: [{ data: pts, backgroundColor: '#00d4aa30', borderColor: '#00d4aa', pointRadius: 3 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+  }
+
+  if (document.getElementById('pieChart') && catCols.length) {
+    const col = catCols[0].name;
+    const freq = {};
+    rows.forEach(r => { const v = String(r[col]||'null'); freq[v] = (freq[v]||0)+1; });
+    const labels = Object.keys(freq).slice(0,8);
+    const isSmall = labels.length <= 5;
+    state.charts.pie = new Chart(document.getElementById('pieChart'), {
+      type: isSmall ? 'doughnut' : 'bar',
+      data: { labels, datasets: [{ data: labels.map(l => freq[l]), backgroundColor: COLORS.slice(0,labels.length), borderWidth: 2, borderColor: '#161b22' }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: isSmall, position: 'right', labels: { color: '#8b949e', padding: 8 } } } }
+    });
+  }
+
+  if (document.getElementById('histChart') && state.selectedCol) {
+    const col = schema.find(s => s.name === state.selectedCol);
+    if (col && col.type === 'numeric') {
+      const vals = rows.map(r => Number(r[col.name])).filter(v => !isNaN(v));
+      const min = Math.min(...vals), max = Math.max(...vals);
+      const bins = 15, step = (max - min) / bins;
+      const counts = Array(bins).fill(0);
+      vals.forEach(v => { const i = Math.min(Math.floor((v-min)/step), bins-1); counts[i]++; });
+      state.charts.hist = new Chart(document.getElementById('histChart'), {
+        type: 'bar',
+        data: { labels: counts.map((_,i) => (min+i*step).toFixed(0)), datasets: [{ data: counts, backgroundColor: '#00d4aa40', borderColor: '#00d4aa', borderWidth: 1, borderRadius: 2 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    }
+  }
+
+  if (document.getElementById('catChart') && state.selectedCol) {
+    const col = schema.find(s => s.name === state.selectedCol);
+    if (col && (col.type === 'categorical' || col.type === 'boolean')) {
+      const freq = {};
+      rows.forEach(r => { const v = String(r[col.name]||'null'); freq[v] = (freq[v]||0)+1; });
+      const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,8);
+      const isSmall = sorted.length <= 5;
+      state.charts.cat = new Chart(document.getElementById('catChart'), {
+        type: isSmall ? 'doughnut' : 'bar',
+        data: { labels: sorted.map(([k])=>k), datasets: [{ data: sorted.map(([,v])=>v), backgroundColor: COLORS.slice(0,sorted.length), borderWidth: 1, borderColor: '#161b22' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: isSmall, position: 'right', labels: { color: '#8b949e' } } } }
+      });
+    }
+  }
+
+  if (document.getElementById('boxChart') && numCols.length) {
+    const cols = numCols.slice(0, 5);
+    state.charts.box = new Chart(document.getElementById('boxChart'), {
+      type: 'bar',
+      data: {
+        labels: cols.map(c => c.name),
+        datasets: [{
+          label: 'median',
+          data: cols.map(col => {
+            const vals = rows.map(r=>Number(r[col.name])).filter(v=>!isNaN(v)).sort((a,b)=>a-b);
+            return vals[Math.floor(vals.length/2)] || 0;
+          }),
+          backgroundColor: COLORS.slice(0, cols.length).map(c=>c+'40'),
+          borderColor: COLORS.slice(0, cols.length), borderWidth: 1.5, borderRadius: 3
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+  }
+
+  if (document.getElementById('corrMatrix') && numCols.length >= 2) {
+    const cols = numCols.slice(0, 5);
+    const getVals = c => rows.map(r => Number(r[c.name])).filter(v => !isNaN(v));
+    const corr = (a, b) => {
+      const n = Math.min(a.length, b.length);
+      if (n < 2) return 0;
+      const am = a.slice(0,n).reduce((s,v)=>s+v,0)/n;
+      const bm = b.slice(0,n).reduce((s,v)=>s+v,0)/n;
+      let num=0, da=0, db=0;
+      for(let i=0;i<n;i++){num+=(a[i]-am)*(b[i]-bm);da+=(a[i]-am)**2;db+=(b[i]-bm)**2;}
+      return da&&db ? num/Math.sqrt(da*db) : 0;
+    };
+    const w = Math.min(60, Math.floor(380/cols.length));
+    let html = `<div style="display:inline-grid; grid-template-columns: 80px ${cols.map(()=>`${w}px`).join(' ')}; gap:2px; font-family:var(--mono); font-size:10px;">`;
+    html += '<div></div>' + cols.map(c=>`<div style="text-align:center; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${c.name}">${c.name.slice(0,6)}</div>`).join('');
+    cols.forEach(r => {
+      html += `<div style="color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.name}">${r.name.slice(0,10)}</div>`;
+      cols.forEach(c => {
+        const v = corr(getVals(r), getVals(c));
+        const abs = Math.abs(v);
+        const bg = v > 0 ? `rgba(0,212,170,${abs*0.8})` : `rgba(239,68,68,${abs*0.8})`;
+        const textColor = abs > 0.5 ? '#0d1117' : 'var(--text-secondary)';
+        html += `<div style="background:${bg}; color:${textColor}; border-radius:2px; display:flex; align-items:center; justify-content:center; height:${w}px; width:${w}px;">${v.toFixed(2)}</div>`;
+      });
+    });
+    html += '</div>';
+    document.getElementById('corrMatrix').innerHTML = html;
+  }
+}
+
+function runCleaning() {
+  if (!state.dataset) return;
+  let cleaned = state.cleaned.map(r => ({...r}));
+  const log = [];
+  state.schema.forEach(col => {
+    if (col.nullCount === 0) return;
+    if (col.type === 'numeric') {
+      const vals = cleaned.map(r => Number(r[col.name])).filter(v => !isNaN(v));
+      const mean = vals.reduce((a,b)=>a+b,0)/vals.length;
+      let fixed = 0;
+      cleaned.forEach(r => { if (r[col.name] === null || r[col.name] === undefined || r[col.name] === '') { r[col.name] = +mean.toFixed(2); fixed++; } });
+      log.push({ type:'fix', msg:`Filled ${fixed} missing in "${col.name}" with mean (${mean.toFixed(2)})` });
+    } else {
+      const freq = {};
+      cleaned.forEach(r => { const v = r[col.name]; if (v !== null && v !== undefined) freq[v] = (freq[v]||0)+1; });
+      const mode = Object.entries(freq).sort((a,b)=>b[1]-a[1])[0]?.[0];
+      let fixed = 0;
+      if (mode) cleaned.forEach(r => { if (r[col.name] === null || r[col.name] === undefined) { r[col.name] = mode; fixed++; } });
+      if (fixed > 0) log.push({ type:'fix', msg:`Filled ${fixed} missing in "${col.name}" with mode ("${mode}")` });
+    }
+  });
+  const beforeLen = cleaned.length;
+  const seen = new Set();
+  cleaned = cleaned.filter(r => { const k = JSON.stringify(r); if (seen.has(k)) return false; seen.add(k); return true; });
+  if (cleaned.length < beforeLen) log.push({ type:'fix', msg:`Removed ${beforeLen - cleaned.length} duplicate rows` });
+  state.schema.filter(s=>s.type==='numeric').forEach(s => {
+    const ol = detectOutliers(cleaned, s.name);
+    if (ol.length) log.push({ type:'warn', msg:`${ol.length} outliers remain in "${s.name}" — review manually` });
+  });
+  state.cleaned = cleaned;
+  state.cleaningLog = [...state.cleaningLog, ...log];
+  state.schema = detectSchema(cleaned);
+  renderSidebar();
+  destroyCharts();
+  renderCurrentTab();
+}
+
+function removeDups() {
+  if (!state.dataset) return;
+  const before = state.cleaned.length;
+  const seen = new Set();
+  state.cleaned = state.cleaned.filter(r => { const k = JSON.stringify(r); if (seen.has(k)) return false; seen.add(k); return true; });
+  const removed = before - state.cleaned.length;
+  if (removed > 0) state.cleaningLog.push({ type:'fix', msg:`Removed ${removed} duplicate rows` });
+  destroyCharts();
+  renderCurrentTab();
+}
+
+function triggerUpload() { document.getElementById('file-input').click(); }
+
+function handleFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  document.getElementById('dataset-title').textContent = file.name.replace(/\.[^.]+$/, '');
+  if (file.name.endsWith('.csv')) {
+    Papa.parse(file, { header: true, skipEmptyLines: true, dynamicTyping: true, complete: r => initDashboard(r.data) });
+  } else if (file.name.endsWith('.json')) {
+    const reader = new FileReader();
+    reader.onload = e => { try { initDashboard(JSON.parse(e.target.result)); } catch(ex) { alert('Invalid JSON'); } };
+    reader.readAsText(file);
+  } else {
+    alert('For Excel files, please save as CSV first.');
+  }
+}
+
+function loadSample() {
+  document.getElementById('dataset-title').textContent = 'employee-sample';
+  initDashboard(SAMPLE_DATA);
+}
+
+function refreshData() {
+  if (!state.dataset) return;
+  destroyCharts();
+  renderCurrentTab();
+}
+
+function exportReport() {
+  if (!state.cleaned) return;
+  const keys = Object.keys(state.cleaned[0]);
+  const csv = [keys.join(','), ...state.cleaned.map(r => keys.map(k => `"${String(r[k]??'').replace(/"/g,'""')}"`).join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'cleaned_data.csv'; a.click();
+}
+
+loadSample();
+</script>
+</body>
+</html>
